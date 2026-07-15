@@ -1,0 +1,378 @@
+/* ==========================================================================
+   App.css — Giao diện React (khoiTaoLaSo) — dùng chung bảng màu với style.css
+   ========================================================================== */
+
+   :root{
+    --ink:#12141c;
+    --ink-2:#191d29;
+    --card:#1c2131;
+    --card-border:#33395083;
+    --paper:#f4ecd8;
+    --paper-2:#ece0c4;
+    --gold:#c9a24b;
+    --gold-bright:#e6c877;
+    --cinnabar:#a8342a;
+    --jade:#4c8a71;
+    --text:#e9e3d2;
+    --muted:#a79c82;
+    --muted-2:#7c7460;
+    --radius:4px;
+  }
+  
+  *{ box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    background: var(--ink);
+    font-family: 'Be Vietnam Pro', sans-serif;
+  }
+  
+  .ant-card-body {
+    padding: 5px;
+  }
+  
+  /* ---------- Bố cục chia đôi: Form bên trái, Lá số bên phải ---------- */
+  .lapla-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  @media (min-width: 992px) {
+    .lapla-wrap {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .lapla-form {
+      width: 390px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 20px;
+    }
+    .chart-wrap {
+      flex-grow: 1;
+    }
+  }
+  
+  .chart-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  /* ---------- Khung lưới 4x4 cho 12 cung + ô trung tâm ---------- */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
+    background-color: var(--card-border);
+    padding: 1px;
+    border-radius: var(--radius);
+    border: 2px solid var(--gold);
+    position: relative; /* bắt buộc: neo cho SVG overlay (đường nối Mệnh-Tài Bạch-Quan Lộc-Thiên Di) */
+    max-width: 900px;
+    background-color:white
+  }
+
+  /* ---------- Thanh hành động phía trên lá số: chuyển chế độ xem / tải ảnh ---------- */
+  .chart-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .chart-action-btn {
+    padding: 10px 18px;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .chart-action-btn.primary {
+    background: var(--gold);
+    color: #1a1a1a;
+    border-color: var(--gold);
+  }
+  .chart-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .chart-svg-overlay line {
+    vector-effect: non-scaling-stroke;
+  }
+  
+  /* ---------- Ô cung ---------- */
+  .chart-cell {
+    background: var(--card);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--text);
+    position: relative;
+    min-height: 260px;
+    line-height: 1;
+    background: white;
+    border: 1px solid black;
+  }
+  
+  .chart-cell.is-menh {
+    background: rgba(201, 162, 75, 0.1);
+   
+  }
+  
+  .chart-cell.is-than {
+    background: rgba(201, 162, 75, 0.1);
+
+  }
+  
+
+  
+  /* Hàng trên: địa chi + Đại vận / Tiểu vận */
+  .cell-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: bold;
+    padding-bottom: 4px;
+  }
+  .cell-chi {
+    color: var(--gold-bright);
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .chart-cell.is-than .cell-chi {
+    color: var(--gold);
+  }
+  .cell-dv-tv {
+    color: var(--muted-2);
+    font-size: 10.5px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  
+  /* Tên cung chức năng */
+  .cell-cung {
+    text-align: center;
+    font-weight: 700;
+    color: black;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  
+  /* Danh sách sao trong ô */
+  .cell-saolist {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  
+  /* Chính tinh: to, in đậm, giữa ô */
+  .chinh-tinh-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-height: 20px;
+  }
+  .sao-chinh-tinh {
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gold-bright);
+  }
+  /* Màu ngũ hành riêng cho từng chính tinh */
+  .sao-chinh-tinh.hanh-kim { color: #b0b8bd; }
+  .sao-chinh-tinh.hanh-moc { color: #4caf6b; }
+  .sao-chinh-tinh.hanh-thuy { color: black; }
+  .sao-chinh-tinh.hanh-hoa { color: #ef5350; }
+  .sao-chinh-tinh.hanh-tho { color: #d2a24c; }
+  
+  /* Phụ tinh: dạng tag, xếp lưới */
+  .phu-tinh-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px 5px;
+  }
+  .sao-phu-tinh {
+    font-size: 12px;
+    border-radius: 3px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    color: black;
+  }
+  
+  /* Cát tinh lớn (Lộc Tồn, Khôi Việt, Xương Khúc, Tả Hữu, Thiên Mã...) */
+  .sao-cat-tinh-lon {
+    color: #10b981;
+    font-weight: 700;
+  }
+  /* Cát tinh nhỏ / phụ tinh trung tính */
+  .sao-cat-tinh-nho {
+    color: black;
+  }
+  /* Sát tinh / hung tinh */
+  .sao-hung-tinh {
+    color: #ef4444;
+    font-weight: 600;
+  }
+  /* Tứ Hóa: Lộc Quyền Khoa Kỵ */
+  .sao-tu-hoa-tinh {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  /* Vòng Tràng Sinh */
+  .sao-trang-sinh {
+    color: black;
+    font-style: normal;
+  }
+  /* Tuần / Triệt không vong */
+  .sao-tuan,
+  .sao-triet {
+    color: WHITE;
+    background: BLACK;
+    font-weight: 700;
+    padding: 2px 4px;
+  }
+  
+  /* Can Chi của cung — hàng dưới cùng */
+  .cell-canchi {
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--muted-2);
+    margin-top: auto;
+    padding-top: 4px;
+    text-align: left;
+  }
+  
+  /* ---------- Ô trung tâm (Thông tin bản mệnh) ---------- */
+  .chart-center {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+    background: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 18px;
+    text-align: center;
+    gap: 4px;
+    background: white;
+    justify-content: center;
+    background: url(./img/banner.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: 1px solid black;
+  }
+  .chart-center h3 {
+    font-family: 'Noto Serif', serif;
+    color: var(--gold-bright);
+    font-size: 18px;
+    margin: 0;
+  }
+  .chart-center h4 {
+    font-family: 'Noto Serif', serif;
+    color: var(--muted-2);
+    font-size: 13px;
+    margin: 0;
+    font-weight: 400;
+  }
+  
+  /* ---------- Responsive: cuộn ngang lá số trên mobile ---------- */
+  @media (max-width: 992px) {
+    .lapla-wrap {
+      gap: 24px;
+    }
+    .chart-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 12px;
+    }
+    .chart-grid {
+      min-width: 720px;
+      margin: 0 auto;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    body {
+      padding: 40px 0;
+    }
+    .chart-cell {
+      min-height: 190px;
+      padding: 8px 10px;
+    }
+  }
+
+
+
+  /* Container bọc ngoài cả 2 cột phụ tinh */
+.wrap-phu-tinh-doi-lap {
+  display: flex;
+  justify-content: space-between; /* Đẩy cột cát sang trái, sát sang phải */
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 8px;
+  gap: 10px; /* Tạo khoảng cách giữa 2 cột */
+}
+
+/* Định dạng từng cột */
+.col-cat-tinh, .col-sat-tinh {
+  flex: 1; /* Chia đều độ rộng 50% - 50% cho 2 bên */
+  display: flex;
+  flex-direction: column; /* Xếp các sao theo chiều dọc */
+}
+
+/* Căn lề chữ cho chuẩn vị trí */
+.col-cat-tinh {
+  align-items: flex-start;
+  text-align: left; /* Cát tinh lệch trái */
+}
+
+.col-sat-tinh {
+  align-items: flex-end;
+  text-align: right; /* Sát tinh lệch phải */
+}
+
+/* CSS cho từng ngôi sao phụ tinh */
+.sao-phu-tinh {
+  font-size: 12px;
+  margin-bottom: 3px;
+  white-space: nowrap; /* Tránh việc chữ của 1 sao bị tự động bẻ xuống dòng */
+}
+
+/* Căn chỉnh Trường Sinh và Tuần Triệt nằm giữa ở phía dưới */
+.wrap-truong-sinh {
+  position: absolute;
+  bottom: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgb(89, 89, 89);
+  text-align: center;
+  font-size: 11px;
+  font-style: normal;
+}
+ .wrap-tuan-triet {
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
+  width: auto;
+  border: 1px;
+  color: black;
+  color: white;
+  padding: 1px;
+  font-size: 11px;
+}
