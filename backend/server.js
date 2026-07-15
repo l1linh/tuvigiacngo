@@ -1,19 +1,37 @@
 // backend/server.js
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 const { khoiTaoLaSo } = require('./tuvi');
+const authRoutes = require('./routes/auth');
+const quizRoutes = require('./routes/quiz');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Cấu hình Middleware
 app.use(cors());
-app.use(express.json()); // Phân tích dữ liệu JSON từ request body
+app.use(express.json());
 
-// API an lá số tử vi
+// Kết nối MongoDB
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  console.error("❌ Lỗi: Chưa cấu hình MONGODB_URI trong file .env!");
+} else {
+  mongoose.connect(mongoUri)
+    .then(() => console.log('🔌 [Database] Kết nối thành công tới MongoDB!'))
+    .catch((err) => console.error('💥 [Database] Lỗi kết nối dữ liệu:', err));
+}
+
+// Routes đăng ký/đăng nhập + trắc nghiệm
+app.use('/api/auth', authRoutes);
+app.use('/api/quiz', quizRoutes);
+
+// API an lá số tử vi (giữ nguyên như cũ)
 app.post('/api/an-la-so', (req, res, next) => {
   try {
-    // 1. Kiểm tra request body có tồn tại không
     if (!req.body) {
       return res.status(400).json({
         success: false,
@@ -23,7 +41,6 @@ app.post('/api/an-la-so', (req, res, next) => {
 
     const { name, gender, calendarType, day, month, year, hour } = req.body;
 
-    // 2. Ép kiểu dữ liệu và kiểm tra tính hợp lệ ban đầu
     const d = parseInt(day, 10);
     const m = parseInt(month, 10);
     const y = parseInt(year, 10);
@@ -37,24 +54,21 @@ app.post('/api/an-la-so', (req, res, next) => {
     }
 
     if (isNaN(hourChiIndex) || hourChiIndex < 0 || hourChiIndex > 11) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Giờ sinh không hợp lệ. Vui lòng chọn lại đúng giờ từ Tý đến Hợi!" 
+      return res.status(400).json({
+        success: false,
+        message: "Giờ sinh không hợp lệ. Vui lòng chọn lại đúng giờ từ Tý đến Hợi!"
       });
     }
 
-    // 3. Thực hiện khởi tạo lá số
     const dataLaSo = khoiTaoLaSo(name, gender, calendarType, d, m, y, hourChiIndex);
-    
-    // 4. Trả kết quả về cho Client
+
     return res.json({
       success: true,
       data: dataLaSo
     });
 
   } catch (error) {
-    // Nếu có bất cứ lỗi nào xảy ra trong quá trình tính toán, chuyển tiếp tới Error Handler
-    next(error); 
+    next(error);
   }
 });
 

@@ -2,6 +2,9 @@ import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { Form, Input, Select, Button, Card } from 'antd';
 import axios from 'axios';
 import './App.css';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import AuthBar from './components/AuthBar';
+import QuizDemo from './components/QuizDemo';
 
 const { Option } = Select;
 
@@ -87,7 +90,9 @@ function loadHtml2Canvas() {
 
 const EXPORT_WIDTH = 780; // Chiều rộng cố định kiểu desktop dùng khi chụp ảnh, để ảnh xuất ra không bao giờ bị vỡ trên mobile
 
-function App() {
+function AppContent() {
+const { user } = useAuth();
+const [showQuiz, setShowQuiz] = useState(false);
 const [loading, setLoading] = useState(false);
 const [chartData, setChartData] = useState(null);
 const [error, setError] = useState('');
@@ -221,12 +226,35 @@ async function handleDownloadImage() {
 }
 
 return (
-  <div style={{ padding: '40px 20px', background: '#12141c', minHeight: '100vh', color: '#e9e3d2' }}>
+  <div style={{ padding: '40px 20px', background: '#12141c', minHeight: '100vh', color: '#e9e3d2', position: 'relative' }}>
+    <AuthBar />
+
     <div style={{ textAlign: 'center', marginBottom: '30px' }}>
       <h1 style={{ color: '#c9a24b', fontSize: '32px', fontFamily: 'serif' }}>TỬ VI GIÁC NGỘ</h1>
       <p style={{ color: '#a79c82' }}>Hệ thống an sao tự động - Phiên bản Client-Server</p>
+
+      {/* Nút chuyển đổi giữa Lập lá số và Bài trắc nghiệm mẫu */}
+      <div style={{ marginTop: '10px' }}>
+        <Button
+          type={!showQuiz ? 'primary' : 'default'}
+          onClick={() => setShowQuiz(false)}
+          style={!showQuiz ? { background: '#c9a24b', borderColor: '#c9a24b', marginRight: 8 } : { marginRight: 8 }}
+        >
+          🔮 Lập lá số
+        </Button>
+        <Button
+          type={showQuiz ? 'primary' : 'default'}
+          onClick={() => setShowQuiz(true)}
+          style={showQuiz ? { background: '#c9a24b', borderColor: '#c9a24b' } : {}}
+        >
+          📝 Bài trắc nghiệm mẫu
+        </Button>
+      </div>
     </div>
 
+    {showQuiz ? (
+      <QuizDemo />
+    ) : (
     <div className="lapla-wrap">
       <div className="lapla-form">
         <Card style={{ background: '#1c2131', borderColor: '#33395083' }}>
@@ -480,8 +508,16 @@ return (
         </div>
       )}
     </div>
+    )}
   </div>
 );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
